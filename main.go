@@ -40,7 +40,7 @@ var (
 	showTimestamps = flag.Bool("timestamps", false, "show timestamps with directory listings")
 	altPkgTemplate = flag.String("template", "", "path to an alternate template file")
 	showPlayground = flag.Bool("play", false, "enable playground in web interface")
-	showExamples   = flag.Bool("ex", false, "show examples in command line mode")
+	showExamples   = flag.Bool("ex", true, "show examples in command line mode")
 	declLinks      = flag.Bool("links", true, "link identifiers to their declarations")
 
 	// The hash format for Github is the default `#L%d`; but other source control platforms do not
@@ -63,13 +63,15 @@ var (
 	fs   = vfs.NameSpace{}
 
 	funcs = map[string]interface{}{
-		"comment_md":  commentMdFunc,
-		"base":        path.Base,
-		"md":          mdFunc,
-		"pre":         preFunc,
-		"kebab":       kebabFunc,
-		"bitscape":    bitscapeFunc, //Escape [] for bitbucket confusion
-		"trim_prefix": strings.TrimPrefix,
+		"comment_md":   commentMdFunc,
+		"base":         path.Base,
+		"md":           mdFunc,
+		"pre":          preFunc,
+		"kebab":        kebabFunc,
+		"bitscape":     bitscapeFunc, //Escape [] for bitbucket confusion
+		"trim_prefix":  strings.TrimPrefix,
+		"example_md":   exampleMdFunc,   // with MD wrapper and GO language specifier
+		"example_code": exampleCodeFunc, // pure text
 	}
 )
 
