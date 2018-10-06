@@ -7,22 +7,17 @@ var pkgTemplate = `{{with .PDoc}}
 {{else}}
 # {{ .Name }}
 
-
-* [Overview](#pkg-overview)
-* [Index](#pkg-index){{if $.Examples}}
-* [Examples](#pkg-examples){{- end}}{{if $.Dirs}}
-* [Subdirectories](#pkg-subdirectories){{- end}}
-
 ## Installation
 ` + "\t" + `go get {{.ImportPath}}
 
-## <a name="pkg-overview">Overview</a>
+## Overview
 {{comment_md .Doc}}
 {{example_md $ "" "### Usage Example"}}
 
-## <a name="pkg-index">Index</a>{{if .Consts}}
-* [Constants](#pkg-constants){{end}}{{if .Vars}}
-* [Variables](#pkg-variables){{end}}{{- range .Funcs -}}{{$name_html := html .Name}}
+## Index
+{{if .Consts}}* [Constants](##constants){{end}}
+{{if .Vars}}* [Variables](##variables){{end}}
+{{- range .Funcs -}}{{$name_html := html .Name}}
 * [{{node_html $ .Decl false | sanitize}}](#{{$name_html}}){{- end}}{{- range .Types}}{{$tname_html := html .Name}}
 * [type {{$tname_html}}](#{{$tname_html}}){{- range .Funcs}}{{$name_html := html .Name}}
   * [{{node_html $ .Decl false | sanitize}}](#{{$name_html}}){{- end}}{{- range .Methods}}{{$name_html := html .Name}}
@@ -36,12 +31,21 @@ var pkgTemplate = `{{with .PDoc}}
 {{range .}}[{{.|filename|html}}]({{.|srcLink|html}}) {{end}}
 {{end}}
 
-{{with .Consts}}## <a name="pkg-constants">Constants</a>
-{{range .}}{{node $ .Decl | pre}}
-{{comment_md .Doc}}{{end}}{{end}}
-{{with .Vars}}## <a name="pkg-variables">Variables</a>
-{{range .}}{{node $ .Decl | pre}}
-{{comment_md .Doc}}{{end}}{{end}}
+{{with .Consts}}
+## Constants
+{{range .}}
+{{node $ .Decl | pre}}
+{{comment_md .Doc}}
+{{end}}
+{{end}}
+
+{{with .Vars}}
+## Variables
+{{range .}}
+{{node $ .Decl | pre}}
+{{comment_md .Doc}}
+{{end}}
+{{end}}
 
 {{range .Funcs}}{{$name_html := html .Name}}## <a name="{{$name_html}}">func</a> [{{$name_html}}]({{posLink_url $ .Decl}})
 {{node $ .Decl | pre}}
